@@ -1,0 +1,23 @@
+{% extends "base.html" %}
+
+
+{% block content %}
+    {% if current_user.is_authenticated %}
+        <h1>Hello, {{ current_user.username }}!</h1>
+    {% else %}
+        <h2>Welcome to Tweeter! <a href="{{ url_for('register') }}">Sign Up</a> to Post.</h2>
+    {% endif %}
+    
+    {% for post in posts[::-1] %}
+        <article class="media content-section">
+            <a href="{{ url_for('user', username=post.author.username) }}"><img class="rounded-circle article-img" src="{{ url_for('static', filename='profile_pics/' + post.author.image_file) }}"></a>
+            <div class="media-body">
+                <div class="article-metadata">
+                    <a class="mr-2" href="{{ url_for('user', username=post.author.username) }}">{{ post.author.username }}</a>
+                    <p class="article-content"><a href="{{ url_for('post', post_id=post.id) }}">{{ post.content }}</a></p>
+                    <small class="text-muted">{{ post.date_posted.strftime('%a, %d, %B %Y %I:%M%p') }}</small>
+                </div>
+            </div>
+        </article>
+    {% endfor %}
+{% endblock %}

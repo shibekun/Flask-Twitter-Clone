@@ -1,0 +1,25 @@
+{% extends "base.html" %}
+
+{% block content %}
+    <div class="content-section">
+        <div class="media">
+            <img class="rounded-circle account-img" src="{{ url_for('static', filename='profile_pics/' + user.image_file) }}">
+            <div class="media-body">
+                <h2 class="account-heading">{{ user.username }}</h2>
+                <p class="text-secondary">{{ user.email }}</p>
+            </div>
+        </div>
+    </div>
+    <hr>
+    <h2 class="posts">Posts</h2>
+    {% for post in posts[::-1] %}
+        <article class="media content-section">
+            <div class="media-body">
+                <div class="article-metadata">
+                    <p class="article-content"><a href="{{ url_for('post', post_id=post.id) }}">{{ post.content }}</a></p>
+                    <small class="text-muted">{{ post.date_posted.strftime('%a, %d, %B %Y %I:%M%p') }}</small>
+                </div>
+            </div>
+        </article>
+    {% endfor %}
+{% endblock %}
