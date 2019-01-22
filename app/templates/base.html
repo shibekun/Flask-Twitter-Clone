@@ -18,7 +18,7 @@
     </head>
     <body>
         <header class="site-header">
-            <nav class="navbar navbar-expand-md navbar-dark bg-steel fixed-top">
+            <nav class="navbar navbar-expand-md navbar-dark bg-info fixed-top">
                 <div class="container">
                     <a class="navbar-brand mr-4" href="/">Tweeter</a>
                     <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarToggle" aria-controls="navbarToggle" aria-expanded="false" aria-label="Toggle navigation">
@@ -35,7 +35,7 @@
                                 <!-- Search -->
                                 <form class="form-inline">
                                     <input class="form-control mr-sm-2" type="search" placeholder="Search Users" aria-label="Search">
-                                    <button class="btn btn-outline-success my-2 my-sm-0" type="submit">Search</button>
+                                    <button class="btn btn-outline-light my-2 my-sm-0" type="submit">Search</button>
                                 </form>
                                 <a class="nav-item nav-link" href="{{ url_for('new_post') }}"">New Tweet</a>
                                 <a class="nav-item nav-link" href="{{ url_for('account') }}">Account</a>
@@ -62,19 +62,6 @@
                         {% endif %}
                     {% endwith %}
                     {% block content %}{% endblock %}
-                </div>
-                <div class="col-md-4">
-                <div class="content-section">
-                    <h3>Our Sidebar</h3>
-                    <p class='text-muted'>You can put any information here you'd like.
-                    <ul class="list-group">
-                        <li class="list-group-item list-group-item-light">Latest Posts</li>
-                        <li class="list-group-item list-group-item-light">Announcements</li>
-                        <li class="list-group-item list-group-item-light">Calendars</li>
-                        <li class="list-group-item list-group-item-light">etc</li>
-                    </ul>
-                    </p>
-                </div>
                 </div>
             </div>
         </main>

@@ -15,7 +15,7 @@ def index():
     return render_template('index.html', posts=posts)
 
 
-@app.route('/About')
+@app.route('/about')
 def about():
     return render_template('about.html', title='About')
 
@@ -92,7 +92,7 @@ def account():
     return render_template('account.html', title='Account', image_file=image_file, form=form)
 
 
-@app.route("/tweet/new", methods=['GET', 'POST'])
+@app.route("/tweets/new", methods=['GET', 'POST'])
 @login_required
 def new_post():
     form = PostForm()
@@ -105,13 +105,13 @@ def new_post():
     return render_template('create_post.html', title='New Post', form=form)
 
 
-@app.route("/tweet/<int:post_id>")
+@app.route("/tweets/<int:post_id>")
 def post(post_id):
     post = Post.query.get_or_404(post_id)
     return render_template("post.html", post=post)
 
 
-@app.route("/tweet/<int:post_id>/delete", methods=['POST'])
+@app.route("/tweets/<int:post_id>/delete", methods=['POST'])
 @login_required
 def delete_post(post_id):
     post = Post.query.get_or_404(post_id)
@@ -123,7 +123,7 @@ def delete_post(post_id):
     return redirect(url_for('index'))
 
 
-@app.route('/user/<username>')
+@app.route('/users/<username>')
 @login_required
 def user(username):
     user = User.query.filter_by(username=username).first_or_404()
