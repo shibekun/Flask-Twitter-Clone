@@ -1,12 +1,19 @@
 import os
 import secrets
 from PIL import Image
-from flask import render_template, flash, redirect, url_for, request, abort
+from flask_babel import _,get_locale
+from flask import render_template, g, flash, redirect, url_for, request, abort, current_app
 from app import app, db, bcrypt
-from app.forms import LoginForm, RegistrationForm, UpdateAccountForm, PostForm
+from app.forms import LoginForm, RegistrationForm, SearchForm, UpdateAccountForm, PostForm
 from app.models import User, Post
 from flask_login import login_user, current_user, logout_user, login_required
 
+
+@app.before_request
+def before_request():
+    if current_user.is_authenticated:
+        g.search_form = SearchForm()
+    g.locale = str(get_locale())
 
 @app.route('/')
 @app.route('/index')
@@ -129,3 +136,19 @@ def user(username):
     user = User.query.filter_by(username=username).first_or_404()
     posts = Post.query.filter_by(user_id=user.id)
     return render_template('user.html', user=user, posts=posts)
+
+
+@app.route('/search')
+@login_required
+def search():
+    if not g.search_form.validate():
+        return redirect(url_for('index'))
+    page = request.args.get('page', 1, type=int)
+    posts, total = Post.search(g.search_form.q.data, page,
+                               current_app.config['POSTS_PER_PAGE'])
+    next_url = url_for('search', q=g.search_form.q.data, page=page + 1) \
+        if total > page * current_app.config['POSTS_PER_PAGE'] else None
+    prev_url = url_for('search', q=g.search_form.q.data, page=page - 1) \
+        if page > 1 else None
+    return render_template('search.html', title='Search', posts=posts,
+                           next_url=next_url, prev_url=prev_url)

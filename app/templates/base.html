@@ -33,10 +33,19 @@
                         <div class="navbar-nav">
                             {% if current_user.is_authenticated %}
                                 <!-- Search -->
-                                <form class="form-inline">
+                                {% if g.search_form %}
+                                <form class="navbar-form navbar-left" method="get"
+                                        action="{{ url_for('search') }}">
+                                    <div class="form-group">
+                                        {{ g.search_form.q(size=20, class='form-control',
+                                            placeholder=g.search_form.q.label.text) }}
+                                    </div>
+                                </form>
+                                {% endif %}
+                                <!-- <form class="form-inline">
                                     <input class="form-control mr-sm-2" type="search" placeholder="Search Users" aria-label="Search">
                                     <button class="btn btn-outline-light my-2 my-sm-0" type="submit">Search</button>
-                                </form>
+                                </form> -->
                                 <a class="nav-item nav-link" href="{{ url_for('new_post') }}"">New Tweet</a>
                                 <a class="nav-item nav-link" href="{{ url_for('account') }}">Account</a>
                                 <a class="nav-item nav-link" href="{{ url_for('logout') }}">Logout</a>
