@@ -2,11 +2,21 @@ import os
 import secrets
 from PIL import Image
 from flask_babel import _,get_locale
-from flask import render_template, g, flash, redirect, url_for, request, abort, current_app
-from app import app, db, bcrypt
+from flask import render_template, g, flash, redirect, url_for, request, abort, current_app, jsonify
+from app import app, db, bcrypt, login_manager
 from app.forms import LoginForm, RegistrationForm, SearchForm, UpdateAccountForm, PostForm
 from app.models import User, Post
 from flask_login import login_user, current_user, logout_user, login_required
+from app import celery
+import csv
+
+
+APP_ROOT = os.path.dirname(os.path.abspath(__file__))
+
+
+@login_manager.user_loader
+def load_user(user_id):
+    return User.query.get(int(user_id))
 
 
 @app.before_request
@@ -14,6 +24,7 @@ def before_request():
     if current_user.is_authenticated:
         g.search_form = SearchForm()
     g.locale = str(get_locale())
+
 
 @app.route('/')
 @app.route('/index')
@@ -152,3 +163,30 @@ def search():
         if page > 1 else None
     return render_template('search.html', title='Search', posts=posts,
                            next_url=next_url, prev_url=prev_url)
+
+
+@app.route('/download', methods=['GET', 'POST'])
+def download():
+    posts = post_download.delay()
+    return render_template("blank.html", posts=posts)
+
+
+@celery.task
+def post_download():
+    posts = Post.query.all()
+    all_posts = []
+    for post in posts:
+        data= []
+        data.append(post.author.username)
+        data.append(post.content)
+        data.append(post.created_at.strftime('%a, %d, %B %Y %I:%M%p'))
+        all_posts.append(data)
+    file_name = APP_ROOT + '/static/data.csv'
+    fields = ['User', 'Posts', 'Created_at']
+    with open (file_name, 'w') as csv_file:
+        csvwriter = csv.writer(csv_file)
+        csvwriter.writerow(fields)
+        for post in all_posts:
+            csvwriter.writerow(post)
+    
+    return all_posts

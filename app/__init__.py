@@ -1,11 +1,13 @@
+import os
 from flask import Flask, request, current_app
 from flask_sqlalchemy import SQLAlchemy
 from flask_bcrypt import Bcrypt
-import os
+
 from flask_login import LoginManager
 from elasticsearch import Elasticsearch
 from flask_babel import Babel
 from flask_migrate import Migrate
+from celery import Celery
 
 
 app = Flask(__name__)
@@ -27,4 +29,14 @@ login_manager.login_message_category = 'info'
 app.config['POSTS_PER_PAGE'] = 10
 
 
+# Celery configuration
+app.config['CELERY_BROKER_URL'] = 'amqp://guest@localhost//'
+app.config['CELERY_RESULT_BACKEND'] = 'amqp://guest@localhost//'
+
+# Initialize Celery
+celery = Celery(app.name, broker=app.config['CELERY_BROKER_URL'])
+celery.conf.update(app.config)
+
+
 from app import routes, models
+
