@@ -17,7 +17,7 @@
             <div class="media-body">
                 <div class="article-metadata">
                     <p class="article-content"><a href="{{ url_for('post', post_id=post.id) }}">{{ post.content }}</a></p>
-                    <small class="text-muted">{{ post.date_posted.strftime('%a, %d, %B %Y %I:%M%p') }}</small>
+                    <small class="text-muted">{{ post.created_at.strftime('%a, %d, %B %Y %I:%M%p') }}</small>
                 </div>
             </div>
         </article>

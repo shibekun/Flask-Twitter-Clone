@@ -17,8 +17,8 @@ class SearchableMixin(object):
         if total == 0:
             return cls.query.filter_by(id=0), 0
         when = []
-        for i in range(len(ids)):
-            when.append((ids[i], i))
+        for i, id in enumerate(ids):
+            when.append((id, i))
         return cls.query.filter(cls.id.in_(ids)).order_by(
             db.case(when, value=cls.id)), total
 
@@ -65,8 +65,8 @@ class Post(SearchableMixin, db.Model):
     __searchable__ = ['content']
     id = db.Column(db.Integer, primary_key=True)
     content = db.Column(db.Text, nullable=False)
-    date_posted = db.Column(db.DateTime, nullable=False, default=datetime.datetime.now(pytz.timezone("Asia/Calcutta")))
+    created_at = db.Column(db.DateTime, nullable=False, default=datetime.datetime.now(pytz.timezone("Asia/Calcutta")))
     user_id = db.Column(db.Integer, db.ForeignKey('user.id'), nullable=False)
 
     def __repr__(self):
-        return '<Post {} {}>'.format(self.user_id, self.date_posted)
+        return '<Post {} {}>'.format(self.user_id, self.created_at)
