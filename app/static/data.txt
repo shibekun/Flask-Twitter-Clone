@@ -1,5 +1,0 @@
-{'User': 'Mohnish', 'Post': 'First!', 'Created_At': 'Wed, 23, January 2019 01:00PM'}
-{'User': 'Test', 'Post': 'Second! lol', 'Created_At': 'Wed, 23, January 2019 01:00PM'}
-{'User': 'Dev', 'Post': "Hello, everyone! It's Dev!", 'Created_At': 'Wed, 23, January 2019 01:00PM'}
-{'User': 'Dev', 'Post': "I am testing elasticsearch so i'm using the word everyone again.", 'Created_At': 'Wed, 23, January 2019 01:00PM'}
-{'User': 'Dev', 'Post': 'Everyone.', 'Created_At': 'Wed, 23, January 2019 01:00PM'}

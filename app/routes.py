@@ -168,7 +168,7 @@ def search():
 @app.route('/download', methods=['GET', 'POST'])
 def download():
     posts = post_download.delay()
-    return render_template("blank.html", posts=posts)
+    return jsonify(posts.id), 202, {'Location': url_for('get_file', task_id=posts.id)}
 
 
 @celery.task
@@ -190,3 +190,13 @@ def post_download():
             csvwriter.writerow(post)
     
     return all_posts
+
+
+@app.route('/download/<task_id>', methods=['POST'])
+def get_file(task_id):
+    result = post_download.AsyncResult(task_id)
+    if result.ready():
+        status = "Ready"
+    else:
+        status = "Not Ready"
+    return jsonify({"data":status})
